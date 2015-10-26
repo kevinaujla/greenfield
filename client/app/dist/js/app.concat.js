@@ -1,24 +1,36 @@
-'use strict';
-
 // Declare app level module which depends on views, and components
-angular.module('myApp', [
-  'ngRoute',
-  'myApp.view1'
-]).
-config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/view1'});
-}]);
-;'use strict';
+angular.module('myApp', [ 'ngRoute'])
 
-angular.module('myApp.view1', ['ngRoute'])
-
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1', {
-    templateUrl: 'view1/view1.html',
-    controller: 'View1Ctrl'
+.config(function($routeProvider){
+  $routeProvider
+  .when('/view1', {
+   controller: 'View1Ctrl',
+   templateUrl: 'view1/view1.html'
+ })
+  .otherwise({
+    redirectTo: '/'
   });
-}])
 
-.controller('View1Ctrl', [function() {
+})
 
+.controller('View1Ctrl', ['$scope', function($scope) {
+
+ $scope.loginFacebook = function() {
+  // $facebook.login({scope:'email'}).then(function(response) {
+  //   $scope.me();
+  // },
+  // function(response) {
+  //   console.log("Error!", response);
+  // });
+};
+$scope.me = function() {
+  $facebook.api('/me', {fields: 'id, name, email, username'}).then(function(response) {
+    Auth.loginFacebook(response).then(function() {
+      $location.path('/');
+    });
+  });
+};
 }]);
+
+
+;
